@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * GenerateEBeyeXML object.
@@ -36,6 +37,7 @@ public class GenerateEBeyeXML {
     private Project project;
     private Submission submission;
     private File outputDirectory;
+    private HashMap<String, String> proteins;
 
     /**
      * Constructor, without parameters.
@@ -50,10 +52,11 @@ public class GenerateEBeyeXML {
      * @param submission    (required) public project submission summary to be used for generating the EB-eye XML.
      * @param outputDirectory   (required) target output directory.
      */
-    public GenerateEBeyeXML(Project project, Submission submission, File outputDirectory) {
+    public GenerateEBeyeXML(Project project, Submission submission, File outputDirectory, HashMap<String, String> proteins) {
         this.project = project;
         this.submission = submission;
         this.outputDirectory = outputDirectory;
+        this.proteins = proteins;
     }
 
     /**
@@ -113,13 +116,21 @@ public class GenerateEBeyeXML {
 
             if (submission.getProjectMetaData().getSpecies()!=null && submission.getProjectMetaData().getSpecies().size()>0) {
                 for (CvParam species : submission.getProjectMetaData().getSpecies()) {
-                    Element fieldSpecies = document.createElement("ref");
-                    fieldSpecies.setAttribute("dbkey", species.getAccession());
-                    fieldSpecies.setAttribute("dbname", "TAXONOMY");
-                    crossReferences.appendChild(fieldSpecies);
+                    Element refSpecies = document.createElement("ref");
+                    refSpecies.setAttribute("dbkey", species.getAccession());
+                    refSpecies.setAttribute("dbname", "TAXONOMY");
+                    crossReferences.appendChild(refSpecies);
                 }
             }
-            //TODO proteins? From Solr? Accession source?
+
+            if (proteins!=null && !proteins.isEmpty()) {
+                for (String protein : proteins.keySet()) {
+                    Element refProtein = document.createElement("ref");
+                    refProtein.setAttribute("dbkey", protein);
+                    refProtein.setAttribute("dbname", proteins.get(protein));
+                    crossReferences.appendChild(refProtein);
+                }
+            }
 
             Element dates = document.createElement("dates");
             entry.appendChild(dates);
@@ -397,10 +408,18 @@ public class GenerateEBeyeXML {
     }
 
     /**
-     * Sets the output directory.
+     * Sets the current output directory.
      * @param outputDirectory   New output directory to be assigned.
      */
     public void setOutputDirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
+    }
+
+    /**
+     * Sets the current proteins set.
+     * @param proteins  New set of proteins.
+     */
+    public void setProteins(HashMap<String, String> proteins) {
+        this.proteins = proteins;
     }
 }
