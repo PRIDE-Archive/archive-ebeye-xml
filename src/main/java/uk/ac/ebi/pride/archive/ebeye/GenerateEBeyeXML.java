@@ -313,7 +313,7 @@ public class GenerateEBeyeXML {
                 for (ProjectSoftwareCvParam software : project.getSoftware()) {
                     Element refSoftware = document.createElement("field");
                     refSoftware.setAttribute("name", "software");
-                    refSoftware.appendChild(document.createTextNode(software.getName()));
+                    refSoftware.appendChild(document.createTextNode(software.getValue()));
                     additionalFields.appendChild(refSoftware);
                 }
             } else {
