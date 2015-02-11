@@ -123,6 +123,15 @@ public class GenerateEBeyeXML {
                 }
             }
 
+            if (project.getReferences()!=null && project.getReferences().size()>0) {
+                for (Reference reference : project.getReferences()) {
+                    Element refPubMedID = document.createElement("ref");
+                    refPubMedID.setAttribute("dbkey", Integer.toString(reference.getPubmedId()));
+                    refPubMedID.setAttribute("dbname", "pubmed");
+                    crossReferences.appendChild(refPubMedID);
+                }
+            }
+
             if (proteins!=null && !proteins.isEmpty()) {
                 for (String protein : proteins.keySet()) {
                     Element refProtein = document.createElement("ref");
@@ -184,25 +193,6 @@ public class GenerateEBeyeXML {
                 fieldInstruemnt.setAttribute("name", "instrument");
                 fieldInstruemnt.appendChild(document.createTextNode(NOT_AVAILABLE));
                 additionalFields.appendChild(fieldInstruemnt);
-            }
-
-
-            Element submitter = document.createElement("field");
-            submitter.setAttribute("name", "contact");
-            final User SUBMITTER =  project.getSubmitter();
-            submitter.appendChild(document.createTextNode(SUBMITTER.getFirstName() + " " + SUBMITTER.getLastName()
-                    + ", " + SUBMITTER.getEmail() + " " + SUBMITTER.getAffiliation() + " (SUBMITTER)"));
-            additionalFields.appendChild(submitter);
-
-            if (project.getLabHeads()!=null && project.getLabHeads().size()>0) {
-                for (LabHead labHead : project.getLabHeads()) {
-                    Element refLabHead = document.createElement("field");
-                    refLabHead.setAttribute("name", "contact");
-                    refLabHead.appendChild(document.createTextNode(labHead.getFirstName() + " " + labHead.getLastName()
-                            + ", " + labHead.getEmail() + " " + labHead.getAffiliation() + " (LAB HEAD)"));
-                    additionalFields.appendChild(refLabHead);
-                }
-
             }
 
             if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
@@ -353,26 +343,11 @@ public class GenerateEBeyeXML {
 
             if (project.getReferences()!=null && project.getReferences().size()>0) {
                 for (Reference reference : project.getReferences()) {
-                    Element refPubMedID = document.createElement("field");
-                    refPubMedID.setAttribute("name", "pub_med_id");
-                    refPubMedID.appendChild(document.createTextNode(Integer.toString(reference.getPubmedId())));
-                    additionalFields.appendChild(refPubMedID);
-
                     Element refPubMedLine = document.createElement("field");
                     refPubMedLine.setAttribute("name", "publication");
                     refPubMedLine.appendChild(document.createTextNode(reference.getReferenceLine()));
                     additionalFields.appendChild(refPubMedLine);
                 }
-            } else {
-                Element refPubMedID = document.createElement("field");
-                refPubMedID.setAttribute("name", "pub_med_id");
-                refPubMedID.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refPubMedID);
-
-                Element refPubMedLine = document.createElement("field");
-                refPubMedLine.setAttribute("name", "publication");
-                refPubMedLine.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refPubMedLine);
             }
 
             entries.appendChild(entry);
