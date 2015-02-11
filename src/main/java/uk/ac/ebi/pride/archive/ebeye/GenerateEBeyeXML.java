@@ -371,7 +371,7 @@ public class GenerateEBeyeXML {
 
                 Element refPubMedLine = document.createElement("field");
                 refPubMedLine.setAttribute("name", "publication");
-                refPubMedID.appendChild(document.createTextNode(NOT_AVAILABLE));
+                refPubMedLine.appendChild(document.createTextNode(NOT_AVAILABLE));
                 additionalFields.appendChild(refPubMedLine);
             }
 
