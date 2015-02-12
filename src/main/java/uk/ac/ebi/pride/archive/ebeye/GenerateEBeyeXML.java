@@ -360,7 +360,7 @@ public class GenerateEBeyeXML {
             File outputXML = new File(outputDirectory,  "PRIDE_EBEYE_" + project.getAccession() + ".xml");
             StreamResult result = new StreamResult(outputXML.toURI().getPath());
             transformer.transform(source, result);
-            logger.info("Finished generating EB-eye XML file for: " + outputDirectory + File.separator +  project.getAccession() + ".xml" );
+            logger.info("Finished generating EB-eye XML file for: " + outputDirectory + File.separator + "PRIDE_EBEYE_" + project.getAccession() + ".xml" );
         }
 
     }
