@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import uk.ac.ebi.pride.archive.repo.project.*;
 import uk.ac.ebi.pride.data.model.CvParam;
+import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -434,6 +435,16 @@ public class GenerateEBeyeXML {
                     submitterAffiliation.setAttribute("name", "submitter_affiliation");
                     submitterMail.appendChild(document.createTextNode(labhead.getAffiliation()));
                     additionalFields.appendChild(submitterAffiliation);
+                }
+            }
+
+            //Add original link to the files
+            if(submission.getDataFiles() != null && !submission.getDataFiles().isEmpty()){
+                for(DataFile file: submission.getDataFiles()){
+                    Element dataset_link = document.createElement("dataset_file");
+                    dataset_link.setAttribute("name", "dataset_file");
+                    dataset_link.appendChild(document.createTextNode(file.getUrl().toString()));
+                    additionalFields.appendChild(dataset_link);
                 }
             }
 
