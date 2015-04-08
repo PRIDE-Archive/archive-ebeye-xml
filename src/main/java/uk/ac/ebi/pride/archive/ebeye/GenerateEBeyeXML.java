@@ -33,6 +33,7 @@ import java.util.HashMap;
 public class GenerateEBeyeXML {
     private static final Logger logger = LoggerFactory.getLogger(GenerateEBeyeXML.class);
     private static final String NOT_AVAILABLE = "Not available";
+    private static final String OMICS_TYPE    = "Proteomics";
     private Project project;
     private Submission submission;
     private File outputDirectory;
@@ -73,21 +74,27 @@ public class GenerateEBeyeXML {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
 
+            //Add database Name Node
+
             Element database = document.createElement("database");
             document.appendChild(database);
 
+            //Add the name of the database
             Element name = document.createElement("name");
             name.appendChild(document.createTextNode("PRIDE Archive"));
             database.appendChild(name);
 
+            //Add the description of the database
             Element description = document.createElement("description");
             description.appendChild(document.createTextNode(""));
             database.appendChild(description);
 
+            //Database release
             Element release = document.createElement("release");
             release.appendChild(document.createTextNode("3"));
             database.appendChild(release);
 
+            //Release date (This release date is related whit the day where the data was generated)
             Element releaseDate = document.createElement("release_date");
             releaseDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
             database.appendChild(releaseDate);
@@ -96,19 +103,30 @@ public class GenerateEBeyeXML {
             entryCount.appendChild(document.createTextNode("1"));
             database.appendChild(entryCount);
 
+            //Start to index the entries of the project
             Element entries = document.createElement("entries");
             database.appendChild(entries);
 
+            //The project entry to be fill in the document
             Element entry = document.createElement("entry");
             entry.setAttribute("id", project.getAccession());
 
             Element projectName = document.createElement("name");
-            projectName.appendChild(document.createTextNode(project.getAccession()));
+            projectName.appendChild(document.createTextNode(project.getTitle()));
             entry.appendChild(projectName);
 
+            String projDescription = project.getTitle();
+            if (project.getProjectDescription()!=null && !project.getProjectDescription().isEmpty())
+                projDescription = project.getProjectDescription();
+
             Element projectTitle = document.createElement("description");
-            projectTitle.appendChild(document.createTextNode(project.getTitle()));
+            projectTitle.appendChild(document.createTextNode(projDescription));
             entry.appendChild(projectTitle);
+
+
+            /**
+             * Add all cross references to other databases such as TAXONOMY, UNIPROT OR ENSEMBL
+             */
 
             Element crossReferences = document.createElement("cross_references");
             entry.appendChild(crossReferences);
@@ -153,33 +171,40 @@ public class GenerateEBeyeXML {
             datePublished.setAttribute("type", "publication");
             dates.appendChild(datePublished);
 
+
+            /**
+             * Add additional Fields for DDI project to be able to find the projects. Specially additional metadata
+             * such as omics field, ptms, study type, data protocol sample protocol, etc.
+             */
+
             Element additionalFields = document.createElement("additional_fields");
             entry.appendChild(additionalFields);
 
 
-            if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
-                for (ProjectTag projectTag : project.getProjectTags()) {
-                    Element fieldProjTag = document.createElement("field");
-                    fieldProjTag.setAttribute("name", "project_tag");
-                    fieldProjTag.appendChild(document.createTextNode(projectTag.getTag()));
-                    additionalFields.appendChild(fieldProjTag);
-                }
+            // Add the omics type
+            Element omicsType = document.createElement("omics_type");
+            omicsType.appendChild(document.createTextNode(OMICS_TYPE));
+            additionalFields.appendChild(omicsType);
+
+            //Add the Sample Processing Protocol
+
+            if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
+                Element sampleProcProt = document.createElement("field");
+                sampleProcProt.setAttribute("name", "sample_protocol");
+                sampleProcProt.appendChild(document.createTextNode(project.getSampleProcessingProtocol()));
+                additionalFields.appendChild(sampleProcProt);
             }
 
-            if (submission.getProjectMetaData().getTissues()!=null && submission.getProjectMetaData().getTissues().size()>0) {
-                for (CvParam tissue : submission.getProjectMetaData().getTissues()) {
-                    Element fieldTissue = document.createElement("field");
-                    fieldTissue.setAttribute("name", "tissue");
-                    fieldTissue.appendChild(document.createTextNode(tissue.getName()));
-                    additionalFields.appendChild(fieldTissue);
-                }
-            } else {
-                Element fieldTissue = document.createElement("field");
-                fieldTissue.setAttribute("name", "tissue");
-                fieldTissue.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(fieldTissue);
+            //Add Data Processing Protocol
+
+            if (project.getDataProcessingProtocol()!=null && !project.getDataProcessingProtocol().isEmpty()) {
+                Element dataProcProt = document.createElement("field");
+                dataProcProt.setAttribute("name", "data_protocol");
+                dataProcProt.appendChild(document.createTextNode(project.getDataProcessingProtocol()));
+                additionalFields.appendChild(dataProcProt);
             }
 
+            //Add Instrument information
             if (submission.getProjectMetaData().getInstruments()!=null && submission.getProjectMetaData().getInstruments().size()>0) {
                 for (CvParam instrument : submission.getProjectMetaData().getInstruments()) {
                     Element fieldInstruemnt = document.createElement("field");
@@ -194,26 +219,65 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(fieldInstruemnt);
             }
 
-            if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
-                Element sampleProcProt = document.createElement("field");
-                sampleProcProt.setAttribute("name", "sample_processing_protocol");
-                sampleProcProt.appendChild(document.createTextNode(project.getSampleProcessingProtocol()));
-                additionalFields.appendChild(sampleProcProt);
+            //Add disease information
+            if (submission.getProjectMetaData().getDiseases()!=null && submission.getProjectMetaData().getDiseases().size()>0) {
+                for (CvParam disease : submission.getProjectMetaData().getDiseases()) {
+                    Element refDisease = document.createElement("field");
+                    refDisease.setAttribute("name", "disease");
+                    refDisease.appendChild(document.createTextNode(disease.getName()));
+                    additionalFields.appendChild(refDisease);
+                }
+            } else {
+                Element refDisease = document.createElement("field");
+                refDisease.setAttribute("name", "disease");
+                refDisease.appendChild(document.createTextNode(NOT_AVAILABLE));
+                additionalFields.appendChild(refDisease);
             }
 
-            if (project.getDataProcessingProtocol()!=null && !project.getDataProcessingProtocol().isEmpty()) {
-                Element dataProcProt = document.createElement("field");
-                dataProcProt.setAttribute("name", "data_processing_protocol");
-                dataProcProt.appendChild(document.createTextNode(project.getDataProcessingProtocol()));
-                additionalFields.appendChild(dataProcProt);
+            //Tissue information
+            if (submission.getProjectMetaData().getTissues()!=null && submission.getProjectMetaData().getTissues().size()>0) {
+                for (CvParam tissue : submission.getProjectMetaData().getTissues()) {
+                    Element fieldTissue = document.createElement("field");
+                    fieldTissue.setAttribute("name", "tissue");
+                    fieldTissue.appendChild(document.createTextNode(tissue.getName()));
+                    additionalFields.appendChild(fieldTissue);
+                }
+            } else {
+                Element fieldTissue = document.createElement("field");
+                fieldTissue.setAttribute("name", "tissue");
+                fieldTissue.appendChild(document.createTextNode(NOT_AVAILABLE));
+                additionalFields.appendChild(fieldTissue);
             }
 
-            if (project.getProjectDescription()!=null && !project.getProjectDescription().isEmpty()) {
-                Element projDesc = document.createElement("field");
-                projDesc.setAttribute("name", "project_description");
-                projDesc.appendChild(document.createTextNode(project.getProjectDescription()));
-                additionalFields.appendChild(projDesc);
+            //Add PTMs information
+            if (project.getPtms()!=null && project.getPtms().size()>0) {
+                for (ProjectPTM ptmName : project.getPtms()) {
+                    Element modification = document.createElement("field");
+                    modification.setAttribute("name", "modification");
+                    modification.appendChild(document.createTextNode(ptmName.getName()));
+                    additionalFields.appendChild(modification);
+                }
+            } else {
+                Element modification = document.createElement("field");
+                modification.setAttribute("name", "modification");
+                modification.appendChild(document.createTextNode(NOT_AVAILABLE));
+                additionalFields.appendChild(modification);
             }
+
+
+            if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
+                for (ProjectTag projectTag : project.getProjectTags()) {
+                    Element fieldProjTag = document.createElement("field");
+                    fieldProjTag.setAttribute("name", "project_tag");
+                    fieldProjTag.appendChild(document.createTextNode(projectTag.getTag()));
+                    additionalFields.appendChild(fieldProjTag);
+                }
+            }
+
+
+
+
+
 
             if (project.getExperimentTypes()!=null && project.getExperimentTypes().size()>0) {
                 for (ProjectExperimentType expType : project.getExperimentTypes()) {
@@ -270,33 +334,7 @@ public class GenerateEBeyeXML {
             submissionType.appendChild(document.createTextNode(project.getSubmissionType().name()));
             additionalFields.appendChild(submissionType);
 
-            if (project.getPtms()!=null && project.getPtms().size()>0) {
-                for (ProjectPTM ptmName : project.getPtms()) {
-                    Element modification = document.createElement("field");
-                    modification.setAttribute("name", "modification");
-                    modification.appendChild(document.createTextNode(ptmName.getName()));
-                    additionalFields.appendChild(modification);
-                }
-            } else {
-                Element modification = document.createElement("field");
-                modification.setAttribute("name", "modification");
-                modification.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(modification);
-            }
 
-            if (submission.getProjectMetaData().getDiseases()!=null && submission.getProjectMetaData().getDiseases().size()>0) {
-                for (CvParam disease : submission.getProjectMetaData().getDiseases()) {
-                    Element refDisease = document.createElement("field");
-                    refDisease.setAttribute("name", "disease");
-                    refDisease.appendChild(document.createTextNode(disease.getName()));
-                    additionalFields.appendChild(refDisease);
-                }
-            } else {
-                Element refDisease = document.createElement("field");
-                refDisease.setAttribute("name", "disease");
-                refDisease.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refDisease);
-            }
 
             if (project.getSoftware()!=null && project.getSoftware().size()>0) {
                 for (ProjectSoftwareCvParam software : project.getSoftware()) {
