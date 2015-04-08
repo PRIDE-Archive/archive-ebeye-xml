@@ -219,6 +219,36 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(fieldInstruemnt);
             }
 
+            //Add information about the species
+            if (submission.getProjectMetaData().getSpecies()!=null && submission.getProjectMetaData().getSpecies().size()>0) {
+                for (CvParam species : submission.getProjectMetaData().getSpecies()) {
+                    Element refSpecies = document.createElement("field");
+                    refSpecies.setAttribute("name", "species");
+                    refSpecies.appendChild(document.createTextNode(species.getName()));
+                    additionalFields.appendChild(refSpecies);
+                }
+            } else {
+                Element refSpecies = document.createElement("field");
+                refSpecies.setAttribute("name", "species");
+                refSpecies.appendChild(document.createTextNode(NOT_AVAILABLE));
+                additionalFields.appendChild(refSpecies);
+            }
+
+            //Add information about the Cell Type
+            if (submission.getProjectMetaData().getCellTypes()!=null && submission.getProjectMetaData().getCellTypes().size()>0) {
+                for (CvParam cellType : submission.getProjectMetaData().getCellTypes()) {
+                    Element refCellType = document.createElement("field");
+                    refCellType.setAttribute("name", "cell_type");
+                    refCellType.appendChild(document.createTextNode(cellType.getName()));
+                    additionalFields.appendChild(refCellType);
+                }
+            } else {
+                Element refCellType = document.createElement("field");
+                refCellType.setAttribute("name", "cell_type");
+                refCellType.appendChild(document.createTextNode(NOT_AVAILABLE));
+                additionalFields.appendChild(refCellType);
+            }
+
             //Add disease information
             if (submission.getProjectMetaData().getDiseases()!=null && submission.getProjectMetaData().getDiseases().size()>0) {
                 for (CvParam disease : submission.getProjectMetaData().getDiseases()) {
@@ -264,21 +294,7 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(modification);
             }
 
-
-            if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
-                for (ProjectTag projectTag : project.getProjectTags()) {
-                    Element fieldProjTag = document.createElement("field");
-                    fieldProjTag.setAttribute("name", "project_tag");
-                    fieldProjTag.appendChild(document.createTextNode(projectTag.getTag()));
-                    additionalFields.appendChild(fieldProjTag);
-                }
-            }
-
-
-
-
-
-
+            //Add information about experiment type
             if (project.getExperimentTypes()!=null && project.getExperimentTypes().size()>0) {
                 for (ProjectExperimentType expType : project.getExperimentTypes()) {
                     Element refExpType = document.createElement("field");
@@ -293,20 +309,24 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(refExpType);
             }
 
+            //Add curator tags and keywords
+            if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
+                for (ProjectTag projectTag : project.getProjectTags()) {
+                    Element fieldProjTag = document.createElement("field");
+                    fieldProjTag.setAttribute("name", "curator_keywords");
+                    fieldProjTag.appendChild(document.createTextNode(projectTag.getTag()));
+                    additionalFields.appendChild(fieldProjTag);
+                }
+            }
+
             if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
                 Element keywords = document.createElement("field");
-                keywords.setAttribute("name", "keywords");
+                keywords.setAttribute("name", "submitter_keywords");
                 keywords.appendChild(document.createTextNode(project.getKeywords()));
                 additionalFields.appendChild(keywords);
             }
 
-            if (project.getDoi()!=null && !project.getDoi().isEmpty()) {
-                Element doi = document.createElement("field");
-                doi.setAttribute("name", "doi");
-                doi.appendChild(document.createTextNode(project.getDoi()));
-                additionalFields.appendChild(doi);
-            }
-
+            //Specific to proteomics field the quantitation method
             if (project.getQuantificationMethods()!=null && project.getQuantificationMethods().size()>0) {
                 for (ProjectQuantificationMethodCvParam quantMethod : project.getQuantificationMethods()) {
                     Element refQuantMethod = document.createElement("field");
@@ -321,20 +341,10 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(quantMethod);
             }
 
-            if (project.getOtherOmicsLink()!=null && !project.getOtherOmicsLink().isEmpty()) {
-                Element otherOmics = document.createElement("field");
-                otherOmics.setAttribute("name", "other_omics");
-                otherOmics.appendChild(document.createTextNode(project.getOtherOmicsLink()));
-                additionalFields.appendChild(otherOmics);
-            }
-
-
             Element submissionType = document.createElement("field");
             submissionType.setAttribute("name", "submission_type");
             submissionType.appendChild(document.createTextNode(project.getSubmissionType().name()));
             additionalFields.appendChild(submissionType);
-
-
 
             if (project.getSoftware()!=null && project.getSoftware().size()>0) {
                 for (ProjectSoftwareCvParam software : project.getSoftware()) {
@@ -350,40 +360,80 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(refSoftware);
             }
 
-            if (submission.getProjectMetaData().getCellTypes()!=null && submission.getProjectMetaData().getCellTypes().size()>0) {
-                for (CvParam cellType : submission.getProjectMetaData().getCellTypes()) {
-                    Element refCellType = document.createElement("field");
-                    refCellType.setAttribute("name", "cell_type");
-                    refCellType.appendChild(document.createTextNode(cellType.getName()));
-                    additionalFields.appendChild(refCellType);
-                }
-            } else {
-                Element refCellType = document.createElement("field");
-                refCellType.setAttribute("name", "cell_type");
-                refCellType.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refCellType);
+            //Add publication related information
+            if (project.getDoi()!=null && !project.getDoi().isEmpty()) {
+                Element doi = document.createElement("field");
+                doi.setAttribute("name", "doi");
+                doi.appendChild(document.createTextNode(project.getDoi()));
+                additionalFields.appendChild(doi);
             }
 
-            if (submission.getProjectMetaData().getSpecies()!=null && submission.getProjectMetaData().getSpecies().size()>0) {
-                for (CvParam species : submission.getProjectMetaData().getSpecies()) {
-                    Element refSpecies = document.createElement("field");
-                    refSpecies.setAttribute("name", "species");
-                    refSpecies.appendChild(document.createTextNode(species.getName()));
-                    additionalFields.appendChild(refSpecies);
-                }
-            } else {
-                Element refSpecies = document.createElement("field");
-                refSpecies.setAttribute("name", "species");
-                refSpecies.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refSpecies);
-            }
-
+            //Add publication related information
             if (project.getReferences()!=null && project.getReferences().size()>0) {
                 for (Reference reference : project.getReferences()) {
                     Element refPubMedLine = document.createElement("field");
                     refPubMedLine.setAttribute("name", "publication");
                     refPubMedLine.appendChild(document.createTextNode(reference.getReferenceLine()));
                     additionalFields.appendChild(refPubMedLine);
+                }
+            }
+
+            //Add submitter information
+            if(project.getSubmitter() != null){
+                Element submitter = document.createElement("submitter");
+                submitter.setAttribute("name", "submitter");
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getFirstName()));
+                additionalFields.appendChild(submitter);
+
+                Element submitterMail = document.createElement("submitter_mail");
+                submitterMail.setAttribute("name", "submitter_mail");
+                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
+                additionalFields.appendChild(submitterMail);
+
+                Element submitterAffiliation = document.createElement("submitter_Affiliation");
+                submitterAffiliation.setAttribute("name", "submitter_affiliation");
+                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
+                additionalFields.appendChild(submitterAffiliation);
+
+            }
+
+            //Add submitter information
+            if(project.getSubmitter() != null){
+                Element submitter = document.createElement("submitter");
+                submitter.setAttribute("name", "submitter");
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getFirstName()));
+                additionalFields.appendChild(submitter);
+
+                Element submitterMail = document.createElement("submitter_mail");
+                submitterMail.setAttribute("name", "submitter_mail");
+                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
+                additionalFields.appendChild(submitterMail);
+
+                Element submitterAffiliation = document.createElement("submitter_affiliation");
+                submitterAffiliation.setAttribute("name", "submitter_affiliation");
+                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
+                additionalFields.appendChild(submitterAffiliation);
+
+            }
+
+            //Add LabHead information
+            if(project.getLabHeads() != null && !project.getLabHeads().isEmpty()){
+                for(LabHead labhead: project.getLabHeads()){
+
+                    Element submitter = document.createElement("submitter");
+                    submitter.setAttribute("name", "submitter");
+                    submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getFirstName()));
+                    additionalFields.appendChild(submitter);
+
+                    Element submitterMail = document.createElement("submitter_mail");
+                    submitterMail.setAttribute("name", "submitter_mail");
+                    submitterMail.appendChild(document.createTextNode(labhead.getEmail()));
+                    additionalFields.appendChild(submitterMail);
+
+                    Element submitterAffiliation = document.createElement("submitter_affiliation");
+                    submitterAffiliation.setAttribute("name", "submitter_affiliation");
+                    submitterMail.appendChild(document.createTextNode(labhead.getAffiliation()));
+                    additionalFields.appendChild(submitterAffiliation);
                 }
             }
 
