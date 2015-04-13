@@ -32,12 +32,19 @@ import java.util.HashMap;
  * @since   2015-02-10
  */
 public class GenerateEBeyeXML {
+
     private static final Logger logger = LoggerFactory.getLogger(GenerateEBeyeXML.class);
+
     private static final String NOT_AVAILABLE = "Not available";
+
     private static final String OMICS_TYPE    = "Proteomics";
+
     private Project project;
-    private Submission submission;
+
     private File outputDirectory;
+
+    private Submission submission;
+
     private HashMap<String, String> proteins;
 
     /**
@@ -183,12 +190,12 @@ public class GenerateEBeyeXML {
 
 
             // Add the omics type
-            Element omicsType = document.createElement("omics_type");
+            Element omicsType = document.createElement("field");
+            omicsType.setAttribute("name", "omics_type");
             omicsType.appendChild(document.createTextNode(OMICS_TYPE));
             additionalFields.appendChild(omicsType);
 
             //Add the Sample Processing Protocol
-
             if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
                 Element sampleProcProt = document.createElement("field");
                 sampleProcProt.setAttribute("name", "sample_protocol");
@@ -197,7 +204,6 @@ public class GenerateEBeyeXML {
             }
 
             //Add Data Processing Protocol
-
             if (project.getDataProcessingProtocol()!=null && !project.getDataProcessingProtocol().isEmpty()) {
                 Element dataProcProt = document.createElement("field");
                 dataProcProt.setAttribute("name", "data_protocol");
@@ -383,7 +389,7 @@ public class GenerateEBeyeXML {
             if(project.getSubmitter() != null){
                 Element submitter = document.createElement("submitter");
                 submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getFirstName()));
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
                 additionalFields.appendChild(submitter);
 
                 Element submitterMail = document.createElement("submitter_mail");
@@ -400,19 +406,19 @@ public class GenerateEBeyeXML {
 
             //Add submitter information
             if(project.getSubmitter() != null){
-                Element submitter = document.createElement("submitter");
+                Element submitter = document.createElement("field");
                 submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getFirstName()));
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
                 additionalFields.appendChild(submitter);
 
-                Element submitterMail = document.createElement("submitter_mail");
+                Element submitterMail = document.createElement("field");
                 submitterMail.setAttribute("name", "submitter_mail");
                 submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
                 additionalFields.appendChild(submitterMail);
 
-                Element submitterAffiliation = document.createElement("submitter_affiliation");
+                Element submitterAffiliation = document.createElement("field");
                 submitterAffiliation.setAttribute("name", "submitter_affiliation");
-                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
+                submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
                 additionalFields.appendChild(submitterAffiliation);
 
             }
@@ -421,19 +427,19 @@ public class GenerateEBeyeXML {
             if(project.getLabHeads() != null && !project.getLabHeads().isEmpty()){
                 for(LabHead labhead: project.getLabHeads()){
 
-                    Element submitter = document.createElement("submitter");
-                    submitter.setAttribute("name", "submitter");
+                    Element submitter = document.createElement("field");
+                    submitter.setAttribute("name", "labhead");
                     submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getFirstName()));
                     additionalFields.appendChild(submitter);
 
-                    Element submitterMail = document.createElement("submitter_mail");
-                    submitterMail.setAttribute("name", "submitter_mail");
+                    Element submitterMail = document.createElement("field");
+                    submitterMail.setAttribute("name", "labhead_mail");
                     submitterMail.appendChild(document.createTextNode(labhead.getEmail()));
                     additionalFields.appendChild(submitterMail);
 
-                    Element submitterAffiliation = document.createElement("submitter_affiliation");
-                    submitterAffiliation.setAttribute("name", "submitter_affiliation");
-                    submitterMail.appendChild(document.createTextNode(labhead.getAffiliation()));
+                    Element submitterAffiliation = document.createElement("field");
+                    submitterAffiliation.setAttribute("name", "labhead_affiliation");
+                    submitterAffiliation.appendChild(document.createTextNode(labhead.getAffiliation()));
                     additionalFields.appendChild(submitterAffiliation);
                 }
             }
@@ -441,7 +447,7 @@ public class GenerateEBeyeXML {
             //Add original link to the files
             if(submission.getDataFiles() != null && !submission.getDataFiles().isEmpty()){
                 for(DataFile file: submission.getDataFiles()){
-                    Element dataset_link = document.createElement("dataset_file");
+                    Element dataset_link = document.createElement("field");
                     dataset_link.setAttribute("name", "dataset_file");
                     dataset_link.appendChild(document.createTextNode(file.getUrl().toString()));
                     additionalFields.appendChild(dataset_link);
