@@ -6,7 +6,7 @@
 
     <groupId>uk.ac.ebi.pride.archive.ebeye</groupId>
     <artifactId>archive-ebeye-xml</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>archive-ebeye-xml</name>
     <description>Generates EB-eye search XML using PRIDE Archive projects.</description>
