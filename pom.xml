@@ -26,6 +26,12 @@
             <email>tobias@ebi.ac.uk</email>
             <organization>European Bioinformatics Institute</organization>
         </developer>
+        <developer>
+            <id>ypriverol</id>
+            <name>Yasset Perez-Riverol</name>
+            <email>yperez@ebi.ac.uk</email>
+            <organization>European Bioinformatics Institute</organization>
+        </developer>
     </developers>
     <organization>
         <name>European Bioinformatics Institute</name>
