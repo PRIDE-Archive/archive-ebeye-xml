@@ -402,25 +402,6 @@ public class GenerateEBeyeXML {
             if(project.getSubmitter() != null){
                 Element submitter = document.createElement("field");
                 submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
-                additionalFields.appendChild(submitter);
-
-                Element submitterMail = document.createElement("field");
-                submitterMail.setAttribute("name", "submitter_mail");
-                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
-                additionalFields.appendChild(submitterMail);
-
-                Element submitterAffiliation = document.createElement("field");
-                submitterAffiliation.setAttribute("name", "submitter_affiliation");
-                submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
-                additionalFields.appendChild(submitterAffiliation);
-
-            }
-
-            //Add submitter information
-            if(project.getSubmitter() != null){
-                Element submitter = document.createElement("field");
-                submitter.setAttribute("name", "submitter");
                 submitter.appendChild(document.createTextNode(getName(project.getSubmitter())));
                 additionalFields.appendChild(submitter);
 
