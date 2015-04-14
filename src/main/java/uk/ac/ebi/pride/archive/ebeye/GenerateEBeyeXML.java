@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import uk.ac.ebi.pride.archive.repo.project.*;
+import uk.ac.ebi.pride.archive.repo.user.User;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
@@ -399,25 +400,6 @@ public class GenerateEBeyeXML {
 
             //Add submitter information
             if(project.getSubmitter() != null){
-                Element submitter = document.createElement("submitter");
-                submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
-                additionalFields.appendChild(submitter);
-
-                Element submitterMail = document.createElement("submitter_mail");
-                submitterMail.setAttribute("name", "submitter_mail");
-                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
-                additionalFields.appendChild(submitterMail);
-
-                Element submitterAffiliation = document.createElement("submitter_Affiliation");
-                submitterAffiliation.setAttribute("name", "submitter_affiliation");
-                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
-                additionalFields.appendChild(submitterAffiliation);
-
-            }
-
-            //Add submitter information
-            if(project.getSubmitter() != null){
                 Element submitter = document.createElement("field");
                 submitter.setAttribute("name", "submitter");
                 submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
@@ -435,13 +417,33 @@ public class GenerateEBeyeXML {
 
             }
 
+            //Add submitter information
+            if(project.getSubmitter() != null){
+                Element submitter = document.createElement("field");
+                submitter.setAttribute("name", "submitter");
+                submitter.appendChild(document.createTextNode(getName(project.getSubmitter())));
+                additionalFields.appendChild(submitter);
+
+                Element submitterMail = document.createElement("field");
+                submitterMail.setAttribute("name", "submitter_mail");
+                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
+                additionalFields.appendChild(submitterMail);
+
+                if(project.getSubmitter().getAffiliation() != null){
+                    Element submitterAffiliation = document.createElement("field");
+                    submitterAffiliation.setAttribute("name", "submitter_affiliation");
+                    submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
+                    additionalFields.appendChild(submitterAffiliation);
+                }
+            }
+
             //Add LabHead information
             if(project.getLabHeads() != null && !project.getLabHeads().isEmpty()){
                 for(LabHead labhead: project.getLabHeads()){
 
                     Element submitter = document.createElement("field");
                     submitter.setAttribute("name", "labhead");
-                    submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getFirstName()));
+                    submitter.appendChild(document.createTextNode(getName(labhead)));
                     additionalFields.appendChild(submitter);
 
                     Element submitterMail = document.createElement("field");
@@ -449,10 +451,12 @@ public class GenerateEBeyeXML {
                     submitterMail.appendChild(document.createTextNode(labhead.getEmail()));
                     additionalFields.appendChild(submitterMail);
 
-                    Element submitterAffiliation = document.createElement("field");
-                    submitterAffiliation.setAttribute("name", "labhead_affiliation");
-                    submitterAffiliation.appendChild(document.createTextNode(labhead.getAffiliation()));
-                    additionalFields.appendChild(submitterAffiliation);
+                    if(labhead.getAffiliation() != null){
+                        Element submitterAffiliation = document.createElement("field");
+                        submitterAffiliation.setAttribute("name", "labhead_affiliation");
+                        submitterAffiliation.appendChild(document.createTextNode(labhead.getAffiliation()));
+                        additionalFields.appendChild(submitterAffiliation);
+                    }
                 }
             }
 
@@ -496,6 +500,18 @@ public class GenerateEBeyeXML {
 
     }
 
+    private String getName(User submitter) {
+        if(submitter.getLastName() != null && submitter.getLastName().length() > 0)
+            return submitter.getFirstName() + " " + submitter.getLastName();
+        return submitter.getFirstName();
+    }
+
+    private String getName(LabHead submitter) {
+        if(submitter.getLastName() != null && submitter.getLastName().length() > 0)
+            return submitter.getFirstName() + " " + submitter.getLastName();
+        return submitter.getFirstName();
+    }
+
     /**
      * Sets the current project.
      * @param project   New project to be assigned.
@@ -527,4 +543,5 @@ public class GenerateEBeyeXML {
     public void setProteins(HashMap<String, String> proteins) {
         this.proteins = proteins;
     }
+
 }
