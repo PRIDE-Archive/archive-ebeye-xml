@@ -18,6 +18,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -47,6 +48,8 @@ public class GenerateEBeyeXML {
 
     private HashMap<String, String> proteins;
 
+    private boolean fromPride;
+
     /**
      * Constructor, without parameters.
      */
@@ -65,6 +68,15 @@ public class GenerateEBeyeXML {
         this.submission = submission;
         this.outputDirectory = outputDirectory;
         this.proteins = proteins;
+        this.fromPride = false;
+    }
+
+    public GenerateEBeyeXML(Project project, Submission submission, File outputDirectory, HashMap<String, String> proteins, boolean fromPride) {
+        this.project = project;
+        this.submission = submission;
+        this.outputDirectory = outputDirectory;
+        this.proteins = proteins;
+        this.fromPride = fromPride;
     }
 
     /**
@@ -73,7 +85,7 @@ public class GenerateEBeyeXML {
      */
     public void generate() throws Exception {
         if (project==null || submission==null || outputDirectory==null) {
-            logger.error("The project, submission, and output directory all needs to be set before genearting EB-eye XML.");
+            logger.error("The project, submission, and output directory all needs to be set before generating EB-eye XML.");
         }
         if (!project.isPublicProject()) {
             logger.error("Project " + project.getAccession() + " is still private, not generating EB-eye XML.");
@@ -449,7 +461,21 @@ public class GenerateEBeyeXML {
                 for(DataFile file: submission.getDataFiles()){
                     Element dataset_link = document.createElement("field");
                     dataset_link.setAttribute("name", "dataset_file");
-                    dataset_link.appendChild(document.createTextNode(file.getUrl().toString()));
+                    String url;
+                    if (fromPride) {
+                        Date pubDate = project.getPublicationDate();
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(pubDate);
+                        int month = calendar.get(Calendar.MONTH) + 1; // the month are zero based, hence the correction +1
+                        int year = calendar.get(Calendar.YEAR);
+                        url = "ftp://ftp.pride.ebi.ac.uk/pride/data/archive/" + year + "/" +  (month < 10 ? "0" : "") + month + "/"
+                                + project.getAccession() + "/" + file.getFileName();
+                    } else if (file.getUrl() != null && !file.getUrl().toString().isEmpty()) {
+                        url = file.getUrl().toString();
+                    } else {
+                        url = NOT_AVAILABLE;
+                    }
+                    dataset_link.appendChild(document.createTextNode(url));
                     additionalFields.appendChild(dataset_link);
                 }
             }
