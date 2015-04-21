@@ -340,10 +340,14 @@ public class GenerateEBeyeXML {
             }
 
             if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
-                Element keywords = document.createElement("field");
-                keywords.setAttribute("name", "submitter_keywords");
-                keywords.appendChild(document.createTextNode(project.getKeywords()));
-                additionalFields.appendChild(keywords);
+                //Keywords should be a list of keywords splitted by comma
+                String[] arrayKey = project.getKeywords().split(",");
+                for(String key: arrayKey){
+                    Element keywords = document.createElement("field");
+                    keywords.setAttribute("name", "submitter_keywords");
+                    keywords.appendChild(document.createTextNode(project.getKeywords()));
+                    additionalFields.appendChild(keywords);
+                }
             }
 
             //Specific to proteomics field the quantitation method
