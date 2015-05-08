@@ -30,6 +30,7 @@ import java.util.HashMap;
  * supplied as a Project and Submission.
  *
  * @author  Tobias Ternent  tobias@ebi.ac.uk
+ * @author  Yasset Perez-Riverol ypriverol@gmail.com
  * @version 1.0
  * @since   2015-02-10
  */
@@ -37,9 +38,13 @@ public class GenerateEBeyeXML {
 
     private static final Logger logger = LoggerFactory.getLogger(GenerateEBeyeXML.class);
 
-    private static final String NOT_AVAILABLE = "Not available";
+    private static final String NOT_AVAILABLE      = "Not available";
 
-    private static final String OMICS_TYPE    = "Proteomics";
+    private static final String OMICS_TYPE         = "Proteomics";
+
+    private static final String PRIDE_URL          = "http://www.ebi.ac.uk/pride/archive/projects/";
+
+    private static String DEFAULT_EXPERIMENT_TYPE  = "Mass Spectrometry";
 
     private Project project;
 
@@ -208,7 +213,37 @@ public class GenerateEBeyeXML {
             omicsType.appendChild(document.createTextNode(OMICS_TYPE));
             additionalFields.appendChild(omicsType);
 
+
             //Add the Sample Processing Protocol
+            if (project.getSubmissionDate()!=null) {
+                Element submissionDate = document.createElement("field");
+                submissionDate.setAttribute("name", "submission_date");
+                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
+                additionalFields.appendChild(submissionDate);
+            }
+
+            //Full dataset Repository
+            Element full_dataset_link = document.createElement("field");
+            full_dataset_link.setAttribute("name", "full_dataset_link");
+            full_dataset_link.appendChild(document.createTextNode(PRIDE_URL + project.getAccession()));
+            additionalFields.appendChild(full_dataset_link);
+
+            //Add the domain source
+            Element respository = document.createElement("field");
+            respository.setAttribute("name", "domain_source");
+            respository.appendChild(document.createTextNode("pride"));
+            additionalFields.appendChild(respository);
+
+
+            //Add the Sample Processing Protocol
+            if (project.getPublicationDate()!=null) {
+                Element publicationDate = document.createElement("field");
+                publicationDate.setAttribute("name", "publication_date");
+                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
+                additionalFields.appendChild(publicationDate);
+            }
+
+            //Publication Date
             if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
                 Element sampleProcProt = document.createElement("field");
                 sampleProcProt.setAttribute("name", "sample_protocol");
@@ -228,13 +263,13 @@ public class GenerateEBeyeXML {
             if (submission.getProjectMetaData().getInstruments()!=null && submission.getProjectMetaData().getInstruments().size()>0) {
                 for (CvParam instrument : submission.getProjectMetaData().getInstruments()) {
                     Element fieldInstruemnt = document.createElement("field");
-                    fieldInstruemnt.setAttribute("name", "instrument");
+                    fieldInstruemnt.setAttribute("name", "instrument_platform");
                     fieldInstruemnt.appendChild(document.createTextNode(instrument.getName()));
                     additionalFields.appendChild(fieldInstruemnt);
                 }
             } else {
                 Element fieldInstruemnt = document.createElement("field");
-                fieldInstruemnt.setAttribute("name", "instrument");
+                fieldInstruemnt.setAttribute("name", "instrument_platform");
                 fieldInstruemnt.appendChild(document.createTextNode(NOT_AVAILABLE));
                 additionalFields.appendChild(fieldInstruemnt);
             }
@@ -318,16 +353,17 @@ public class GenerateEBeyeXML {
             if (project.getExperimentTypes()!=null && project.getExperimentTypes().size()>0) {
                 for (ProjectExperimentType expType : project.getExperimentTypes()) {
                     Element refExpType = document.createElement("field");
-                    refExpType.setAttribute("name", "experiment_type");
+                    refExpType.setAttribute("name", "technology_type");
                     refExpType.appendChild(document.createTextNode(expType.getName()));
                     additionalFields.appendChild(refExpType);
                 }
-            } else {
-                Element refExpType = document.createElement("field");
-                refExpType.setAttribute("name", "experiment_type");
-                refExpType.appendChild(document.createTextNode(NOT_AVAILABLE));
-                additionalFields.appendChild(refExpType);
             }
+
+            Element refExpType = document.createElement("field");
+            refExpType.setAttribute("name", "technology_type");
+            refExpType.appendChild(document.createTextNode(DEFAULT_EXPERIMENT_TYPE));
+            additionalFields.appendChild(refExpType);
+
 
             //Add curator tags and keywords
             if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
