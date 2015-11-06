@@ -43,7 +43,7 @@
         <!-- PRIDE Archive dependency-->
         <archive.repo.version>0.1.19</archive.repo.version>
         <!-- ProteomeXchange dependency -->
-        <px.submission.core.version>2.0.6</px.submission.core.version>
+        <px.submission.core.version>2.0.9-SNAPSHOT</px.submission.core.version>
         <!-- slf4j dependency -->
         <slf4j.version>1.6.2</slf4j.version>
 

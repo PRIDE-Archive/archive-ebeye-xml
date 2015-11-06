@@ -44,7 +44,7 @@ public class GenerateEBeyeXML {
 
     private static final String PRIDE_URL          = "http://www.ebi.ac.uk/pride/archive/projects/";
 
-    private static String DEFAULT_EXPERIMENT_TYPE  = "Mass Spectrometry";
+    private static final String DEFAULT_EXPERIMENT_TYPE  = "Mass Spectrometry";
 
     private Project project;
 
@@ -433,7 +433,18 @@ public class GenerateEBeyeXML {
                 for (Reference reference : project.getReferences()) {
                     Element refPubMedLine = document.createElement("field");
                     refPubMedLine.setAttribute("name", "publication");
-                    refPubMedLine.appendChild(document.createTextNode(reference.getReferenceLine()));
+                    String referenceLine = "";
+                    if (reference.getPubmedId()!=0) {
+                        referenceLine = reference.getPubmedId() + "";
+                    }
+                    if (reference.getReferenceLine()!=null && !reference.getReferenceLine().isEmpty()) {
+                        referenceLine = referenceLine + " " + reference.getReferenceLine();
+                    }
+                    if (reference.getDoi()!=null && !reference.getDoi().isEmpty()) {
+                        referenceLine = referenceLine + " " + reference.getDoi();
+                    }
+                    referenceLine = referenceLine.trim();
+                    refPubMedLine.appendChild(document.createTextNode(referenceLine));
                     additionalFields.appendChild(refPubMedLine);
                 }
             }
