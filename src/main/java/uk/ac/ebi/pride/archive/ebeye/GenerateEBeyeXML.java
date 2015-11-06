@@ -107,7 +107,7 @@ public class GenerateEBeyeXML {
 
             //Add the name of the database
             Element name = document.createElement("name");
-            name.appendChild(document.createTextNode("PRIDE Archive"));
+            name.appendChild(document.createTextNode("pride"));
             database.appendChild(name);
 
             //Add the description of the database
@@ -188,12 +188,12 @@ public class GenerateEBeyeXML {
             entry.appendChild(dates);
 
             Element dateSubmitted = document.createElement("date");
-            dateSubmitted.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate()));
+            dateSubmitted.setAttribute("value", new SimpleDateFormat("yy-MM-dd").format(project.getSubmissionDate()));
             dateSubmitted.setAttribute("type", "submission");
             dates.appendChild(dateSubmitted);
 
             Element datePublished = document.createElement("date");
-            datePublished.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate()));
+            datePublished.setAttribute("value", new SimpleDateFormat("yy-MM-dd").format(project.getPublicationDate()));
             datePublished.setAttribute("type", "publication");
             dates.appendChild(datePublished);
 
@@ -214,13 +214,13 @@ public class GenerateEBeyeXML {
             additionalFields.appendChild(omicsType);
 
 
-            //Add the Sample Processing Protocol
-            if (project.getSubmissionDate()!=null) {
-                Element submissionDate = document.createElement("field");
-                submissionDate.setAttribute("name", "submission_date");
-                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
-                additionalFields.appendChild(submissionDate);
-            }
+//            //Add the Sample Processing Protocol
+//            if (project.getSubmissionDate()!=null) {
+//                Element submissionDate = document.createElement("field");
+//                submissionDate.setAttribute("name", "submission_date");
+//                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
+//                additionalFields.appendChild(submissionDate);
+//            }
 
             //Full dataset Repository
             Element full_dataset_link = document.createElement("field");
@@ -230,18 +230,18 @@ public class GenerateEBeyeXML {
 
             //Add the domain source
             Element respository = document.createElement("field");
-            respository.setAttribute("name", "domain_source");
+            respository.setAttribute("name", "repository");
             respository.appendChild(document.createTextNode("pride"));
             additionalFields.appendChild(respository);
 
 
-            //Add the Sample Processing Protocol
-            if (project.getPublicationDate()!=null) {
-                Element publicationDate = document.createElement("field");
-                publicationDate.setAttribute("name", "publication_date");
-                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
-                additionalFields.appendChild(publicationDate);
-            }
+//            //Add the Sample Processing Protocol
+//            if (project.getPublicationDate()!=null) {
+//                Element publicationDate = document.createElement("field");
+//                publicationDate.setAttribute("name", "publication_date");
+//                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
+//                additionalFields.appendChild(publicationDate);
+//            }
 
             //Publication Date
             if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
@@ -376,12 +376,12 @@ public class GenerateEBeyeXML {
             }
 
             if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
-                //Keywords should be a list of keywords splitted by comma
+                //Todo: check if this always like this, Keywords should be a list of keywords splitted by comma
                 String[] arrayKey = project.getKeywords().split(",");
                 for(String key: arrayKey){
                     Element keywords = document.createElement("field");
                     keywords.setAttribute("name", "submitter_keywords");
-                    keywords.appendChild(document.createTextNode(project.getKeywords()));
+                    keywords.appendChild(document.createTextNode(key));
                     additionalFields.appendChild(keywords);
                 }
             }
@@ -486,7 +486,8 @@ public class GenerateEBeyeXML {
                 for(DataFile file: submission.getDataFiles()){
                     Element dataset_link = document.createElement("field");
                     dataset_link.setAttribute("name", "dataset_file");
-                    String url;
+                    String url = null;
+                    boolean toBeAdded = true;
                     if (fromPride) {
                         Date pubDate = project.getPublicationDate();
                         Calendar calendar = Calendar.getInstance();
@@ -497,11 +498,11 @@ public class GenerateEBeyeXML {
                                 + project.getAccession() + "/" + file.getFileName();
                     } else if (file.getUrl() != null && !file.getUrl().toString().isEmpty()) {
                         url = file.getUrl().toString();
-                    } else {
-                        url = NOT_AVAILABLE;
                     }
-                    dataset_link.appendChild(document.createTextNode(url));
-                    additionalFields.appendChild(dataset_link);
+                    if(url != null){
+                        dataset_link.appendChild(document.createTextNode(url));
+                        additionalFields.appendChild(dataset_link);
+                    }
                 }
             }
 
