@@ -107,7 +107,7 @@ public class GenerateEBeyeXML {
 
             //Add the name of the database
             Element name = document.createElement("name");
-            name.appendChild(document.createTextNode("pride"));
+            name.appendChild(document.createTextNode("Pride Archive"));
             database.appendChild(name);
 
             //Add the description of the database
