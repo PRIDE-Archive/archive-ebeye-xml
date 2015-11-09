@@ -38,6 +38,14 @@
         <url>http://www.ebi.ac.uk</url>
     </organization>
 
+    <!-- for release-->
+    <scm>
+        <connection>scm:git:github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
+        <developerConnection>scm:git:git@github.com:PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
+        <url>https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <!-- PRIDE Archive dependency-->
         <archive.repo.version>0.1.19</archive.repo.version>
