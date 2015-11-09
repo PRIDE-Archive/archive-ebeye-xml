@@ -40,9 +40,9 @@
 
     <!-- for release-->
     <scm>
-        <connection>scm:git:github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
-        <developerConnection>scm:git:git@github.com:PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
-        <url>https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
+        <connection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
+        <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
+        <url>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
         <tag>HEAD</tag>
     </scm>
 
