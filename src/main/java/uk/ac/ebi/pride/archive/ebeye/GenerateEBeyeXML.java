@@ -188,12 +188,12 @@ public class GenerateEBeyeXML {
             entry.appendChild(dates);
 
             Element dateSubmitted = document.createElement("date");
-            dateSubmitted.setAttribute("value", new SimpleDateFormat("yy-MM-dd").format(project.getSubmissionDate()));
+            dateSubmitted.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate()));
             dateSubmitted.setAttribute("type", "submission");
             dates.appendChild(dateSubmitted);
 
             Element datePublished = document.createElement("date");
-            datePublished.setAttribute("value", new SimpleDateFormat("yy-MM-dd").format(project.getPublicationDate()));
+            datePublished.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate()));
             datePublished.setAttribute("type", "publication");
             dates.appendChild(datePublished);
 
