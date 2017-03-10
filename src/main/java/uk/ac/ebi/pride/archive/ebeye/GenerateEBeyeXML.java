@@ -79,7 +79,7 @@ public class GenerateEBeyeXML {
 
   /**
    * Performs the EB-eye generation of a defined public project, submission summary, and output directory.
-   * @throws Exception
+   * @throws Exception any problems when generating the EBeye xml
    */
   public void generate() throws Exception {
     if (project==null || submission==null || outputDirectory==null) {
@@ -190,7 +190,7 @@ public class GenerateEBeyeXML {
       dates.appendChild(datePublished);
 
 
-      /**
+      /*
        * Add additional Fields for DDI project to be able to find the projects. Specially additional metadata
        * such as omics field, ptms, study type, data protocol sample protocol, etc.
        */
@@ -368,7 +368,7 @@ public class GenerateEBeyeXML {
       }
 
       if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
-        //Todo: check if this always like this, Keywords should be a list of keywords splitted by comma
+        //Todo: check if this always like this, Keywords should be a list of keywords separated by commas
         String[] arrayKey = project.getKeywords().split(",");
         for(String key: arrayKey){
           Element keywords = document.createElement("field");
@@ -490,7 +490,6 @@ public class GenerateEBeyeXML {
           Element dataset_link = document.createElement("field");
           dataset_link.setAttribute("name", "dataset_file");
           String url = null;
-          boolean toBeAdded = true;
           if (fromPride) {
             Date pubDate = project.getPublicationDate();
             Calendar calendar = Calendar.getInstance();
