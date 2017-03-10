@@ -8,50 +8,17 @@
 
     <name>archive-ebeye-xml</name>
     <description>Generates EB-eye search XML using PRIDE Archive projects.</description>
-    <url>...</url>
-    <licenses>
-        <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <id>tobias</id>
-            <name>Tobias Ternent</name>
-            <email>tobias@ebi.ac.uk</email>
-            <organization>European Bioinformatics Institute</organization>
-        </developer>
-        <developer>
-            <id>ypriverol</id>
-            <name>Yasset Perez-Riverol</name>
-            <email>yperez@ebi.ac.uk</email>
-            <organization>European Bioinformatics Institute</organization>
-        </developer>
-    </developers>
-    <organization>
-        <name>European Bioinformatics Institute</name>
-        <url>http://www.ebi.ac.uk</url>
-    </organization>
+    <url>https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
 
-    <!-- for release-->
-    <scm>
-        <connection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
-        <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
-        <url>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
-        <tag>HEAD</tag>
-    </scm>
+    <parent>
+        <groupId>uk.ac.ebi.pride.architectural</groupId>
+        <artifactId>pride-core</artifactId>
+        <version>1.0.1</version>
+    </parent>
 
     <properties>
-        <!-- PRIDE Archive dependency-->
         <archive.repo.version>0.1.19</archive.repo.version>
-        <!-- ProteomeXchange dependency -->
-        <px.submission.core.version>2.0.8</px.submission.core.version>
-        <!-- slf4j dependency -->
-        <slf4j.version>1.6.2</slf4j.version>
-        <!-- character encoding -->
+        <px.submission.core.version>2.0.11</px.submission.core.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -66,17 +33,17 @@
             <!-- maven-compiler-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <!-- maven-source-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
+                <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
                 <executions>
                     <execution>
@@ -134,56 +101,35 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
+            <version>1.7.21</version>
         </dependency>
-
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>ebi-repo</id>
-            <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>http://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 
     <distributionManagement>
         <!-- EBI repo -->
         <repository>
-            <id>nexus-ebi-repo</id>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo</url>
+            <id>pst-release</id>
+            <name>EBI Nexus Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
         </repository>
         <!-- EBI SNAPSHOT repo -->
         <snapshotRepository>
-            <id>nexus-ebi-repo-snapshots</id>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots</url>
+            <uniqueVersion>false</uniqueVersion>
+            <id>pst-snapshots</id>
+            <name>EBI Nexus Snapshots Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
         </snapshotRepository>
-</distributionManagement>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
+        <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
+        <url>hhttps://github.com/PRIDE-Archive/archive-ebeye-xml</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
