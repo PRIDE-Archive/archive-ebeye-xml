@@ -69,6 +69,14 @@ public class GenerateEBeyeXML {
     this.fromPride = false;
   }
 
+  /**
+   * Constructor.
+   * @param project (required) public project to be used for generating the EB-eye XML.
+   * @param submission (required) public project submission summary to be used for generating the EB-eye XML.
+   * @param outputDirectory (required) target output directory.
+   * @param proteins (required) Sollection of proteins.
+   * @param fromPride (required) from PRIDE, or not.
+   */
   public GenerateEBeyeXML(Project project, Submission submission, File outputDirectory, HashMap<String, String> proteins, boolean fromPride) {
     this.project = project;
     this.submission = submission;
@@ -141,8 +149,7 @@ public class GenerateEBeyeXML {
       projectTitle.appendChild(document.createTextNode(projDescription));
       entry.appendChild(projectTitle);
 
-
-      /**
+      /*
        * Add all cross references to other databases such as TAXONOMY, UNIPROT OR ENSEMBL
        */
 
@@ -524,12 +531,22 @@ public class GenerateEBeyeXML {
 
   }
 
+  /**
+   * Gets the name from the submitter.
+   * @param submitter the submitter
+   * @return the submitter's name
+   */
   private String getName(User submitter) {
     if(submitter.getLastName() != null && submitter.getLastName().length() > 0)
       return submitter.getFirstName() + " " + submitter.getLastName();
     return submitter.getFirstName();
   }
 
+  /**
+   * Gets the name from the lab head.
+   * @param submitter the lab head
+   * @return the lab head's name
+   */
   private String getName(LabHead submitter) {
     if(submitter.getLastName() != null && submitter.getLastName().length() > 0)
       return submitter.getFirstName() + " " + submitter.getLastName();
