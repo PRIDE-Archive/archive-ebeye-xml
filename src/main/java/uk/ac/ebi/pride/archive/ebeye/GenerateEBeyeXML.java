@@ -377,10 +377,10 @@ public class GenerateEBeyeXML {
       if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
         //Todo: check if this always like this, Keywords should be a list of keywords separated by commas
         String[] arrayKey = project.getKeywords().split(",");
-        for(String key: arrayKey){
+        for(String key : arrayKey){
           Element keywords = document.createElement("field");
           keywords.setAttribute("name", "submitter_keywords");
-          keywords.appendChild(document.createTextNode(key));
+          keywords.appendChild(document.createTextNode(key.trim()));
           additionalFields.appendChild(keywords);
         }
       }
