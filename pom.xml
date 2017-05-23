@@ -8,7 +8,7 @@
 
     <name>archive-ebeye-xml</name>
     <description>Generates EB-eye search XML using PRIDE Archive projects.</description>
-    <url>https://github.com/PRIDE-Archive/archive-ebeye-xml.git</url>
+    <url>https://github.com/PRIDE-Archive/archive-ebeye-xml</url>
 
     <parent>
         <groupId>uk.ac.ebi.pride.architectural</groupId>
@@ -109,22 +109,6 @@
             <version>1.7.21</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <!-- EBI repo -->
-        <repository>
-            <id>pst-release</id>
-            <name>EBI Nexus Repository</name>
-            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
-        </repository>
-        <!-- EBI SNAPSHOT repo -->
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>pst-snapshots</id>
-            <name>EBI Nexus Snapshots Repository</name>
-            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <scm>
         <connection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
