@@ -17,8 +17,8 @@
     </parent>
 
     <properties>
-        <archive.repo.version>0.1.19</archive.repo.version>
-        <px.submission.core.version>2.0.11</px.submission.core.version>
+        <archive.repo.version>1.0.0</archive.repo.version>
+        <px.submission.core.version>2.0.15</px.submission.core.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
