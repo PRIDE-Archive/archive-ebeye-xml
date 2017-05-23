@@ -19,9 +19,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * GenerateEBeyeXML object.
@@ -335,10 +334,11 @@ public class GenerateEBeyeXML {
 
       //Add PTMs information
       if (project.getPtms()!=null && project.getPtms().size()>0) {
-        for (ProjectPTM ptmName : project.getPtms()) {
+        Set<String> modificationNames  = project.getPtms().stream().map(ProjectPTM::getName).collect(Collectors.toSet());
+        for (String modificationName : modificationNames) { // ensure unique PTM names
           Element modification = document.createElement("field");
           modification.setAttribute("name", "modification");
-          modification.appendChild(document.createTextNode(ptmName.getName()));
+          modification.appendChild(document.createTextNode(modificationName));
           additionalFields.appendChild(modification);
         }
       } else {
