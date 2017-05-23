@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.archive.repo.project.*;
 import uk.ac.ebi.pride.archive.repo.user.User;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.DataFile;
+import uk.ac.ebi.pride.data.model.Param;
 import uk.ac.ebi.pride.data.model.Submission;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -100,7 +101,6 @@ public class GenerateEBeyeXML {
       Document document = documentBuilder.newDocument();
 
       //Add database Name Node
-
       Element database = document.createElement("database");
       document.appendChild(database);
 
@@ -148,10 +148,7 @@ public class GenerateEBeyeXML {
       projectTitle.appendChild(document.createTextNode(projDescription));
       entry.appendChild(projectTitle);
 
-      /*
-       * Add all cross references to other databases such as TAXONOMY, UNIPROT OR ENSEMBL
-       */
-
+      // Add all cross references to other databases such as TAXONOMY, UNIPROT OR ENSEMBL
       Element crossReferences = document.createElement("cross_references");
       entry.appendChild(crossReferences);
 
@@ -196,10 +193,8 @@ public class GenerateEBeyeXML {
       dates.appendChild(datePublished);
 
 
-      /*
-       * Add additional Fields for DDI project to be able to find the projects. Specially additional metadata
-       * such as omics field, ptms, study type, data protocol sample protocol, etc.
-       */
+      /*Add additional Fields for DDI project to be able to find the projects. Specially additional metadata
+       * such as omics field, ptms, study type, data protocol sample protocol, etc.*/
 
       Element additionalFields = document.createElement("additional_fields");
       entry.appendChild(additionalFields);
@@ -210,15 +205,6 @@ public class GenerateEBeyeXML {
       omicsType.setAttribute("name", "omics_type");
       omicsType.appendChild(document.createTextNode(OMICS_TYPE));
       additionalFields.appendChild(omicsType);
-
-
-//            //Add the Sample Processing Protocol
-//            if (project.getSubmissionDate()!=null) {
-//                Element submissionDate = document.createElement("field");
-//                submissionDate.setAttribute("name", "submission_date");
-//                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
-//                additionalFields.appendChild(submissionDate);
-//            }
 
       //Full dataset Repository
       Element full_dataset_link = document.createElement("field");
@@ -232,16 +218,7 @@ public class GenerateEBeyeXML {
       respository.appendChild(document.createTextNode("pride"));
       additionalFields.appendChild(respository);
 
-
-//            //Add the Sample Processing Protocol
-//            if (project.getPublicationDate()!=null) {
-//                Element publicationDate = document.createElement("field");
-//                publicationDate.setAttribute("name", "publication_date");
-//                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
-//                additionalFields.appendChild(publicationDate);
-//            }
-
-      //Publication Date
+      //Add the Sample Processing Protocol
       if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
         Element sampleProcProt = document.createElement("field");
         sampleProcProt.setAttribute("name", "sample_protocol");
@@ -259,10 +236,11 @@ public class GenerateEBeyeXML {
 
       //Add Instrument information
       if (submission.getProjectMetaData().getInstruments()!=null && submission.getProjectMetaData().getInstruments().size()>0) {
-        for (CvParam instrument : submission.getProjectMetaData().getInstruments()) {
+        Set<String> instrumentNames  = submission.getProjectMetaData().getInstruments().stream().map(Param::getName).collect(Collectors.toSet());
+        for (String instrumentName : instrumentNames) {
           Element fieldInstruemnt = document.createElement("field");
           fieldInstruemnt.setAttribute("name", "instrument_platform");
-          fieldInstruemnt.appendChild(document.createTextNode(instrument.getName()));
+          fieldInstruemnt.appendChild(document.createTextNode(instrumentName));
           additionalFields.appendChild(fieldInstruemnt);
         }
       } else {
