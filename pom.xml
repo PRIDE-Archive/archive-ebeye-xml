@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.ebi.pride.archive.ebeye</groupId>
     <artifactId>archive-ebeye-xml</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
 
     <name>archive-ebeye-xml</name>
     <description>Generates EB-eye search XML using PRIDE Archive projects.</description>
@@ -114,6 +114,6 @@
         <connection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</connection>
         <developerConnection>scm:git:https://github.com/PRIDE-Archive/archive-ebeye-xml.git</developerConnection>
         <url>hhttps://github.com/PRIDE-Archive/archive-ebeye-xml</url>
-        <tag>archive-ebeye-xml-1.4</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
