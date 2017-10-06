@@ -444,6 +444,20 @@ public class GenerateEBeyeXML {
           submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
           additionalFields.appendChild(submitterAffiliation);
         }
+
+        if(project.getSubmitter().getCountry() != null){
+          Element submitterCountry = document.createElement("field");
+          submitterCountry.setAttribute("name", "submitter_country");
+          submitterCountry.appendChild(document.createTextNode(project.getSubmitter().getCountry()));
+          additionalFields.appendChild(submitterCountry);
+        }
+
+        if(project.getSubmitter().getOrcid() != null){
+          Element submitterOrcid = document.createElement("field");
+          submitterOrcid.setAttribute("name", "submitter_orcid");
+          submitterOrcid.appendChild(document.createTextNode("http://orcid.org/" + project.getSubmitter().getOrcid()));
+          additionalFields.appendChild(submitterOrcid);
+        }
       }
 
       //Add LabHead information
