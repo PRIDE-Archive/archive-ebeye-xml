@@ -18,7 +18,7 @@
 
     <properties>
         <archive.repo.version>1.0.1</archive.repo.version>
-        <px.submission.core.version>2.0.17</px.submission.core.version>
+        <px.submission.core.version>2.0.18</px.submission.core.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
