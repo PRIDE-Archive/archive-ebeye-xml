@@ -21,9 +21,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -576,4 +578,11 @@ public class GenerateEBeyeXML {
     this.proteins = proteins;
   }
 
+  /**
+   * Sets fromPride.
+   * @param fromPride New value of fromPride.
+   */
+  public void setFromPride(boolean fromPride) {
+    this.fromPride = fromPride;
+  }
 }
